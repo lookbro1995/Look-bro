@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Look Bro Widget</title>
+    <style>
+        .look-bro-widget {
+            border: 2px solid #ff4500;
+            padding: 20px;
+            max-width: 400px;
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px auto;
+        }
+        .look-bro-button {
+            background-color: #ff4500;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .look-bro-button:hover {
+            background-color: #ff6347;
+        }
+        #look-bro-output {
+            margin-top: 15px;
+            font-size: 18px;
+            font-style: italic;
+        }
+        #click-counter {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #ff4500;
+        }
+    </style>
+</head>
+<body>
+    <div class="look-bro-widget">
+        <h2>Look Bro Generator</h2>
+        <button class="look-bro-button" id="look-bro-btn">Look Bro</button>
+        <div id="look-bro-output">Click the button, bro!</div>
+        <div id="click-counter">Clicks: 0</div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+
+    <!-- Widget Logic -->
+    <script>
+        // Firebase Configuration (You’ll need to set this up)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const clickRef = database.ref('lookBroClicks');
+
+        // Array of "Look Bro" statements
+        const lookBroStatements = [
+            "Look bro, if she doesn’t text back, she’s just practicing for the ghosting Olympics.",
+            "Look bro, life’s too short to fold fitted sheets—embrace the chaos.",
+            "Look bro, you miss 100% of the shots you don’t take, so chug that beer.",
+            "Look bro, the gym’s just a sweaty hug from your future self.",
+            "Look bro, adulting is just pretending you know what’s going on while crying inside.",
+            "Look bro, if it’s not on Strava, did you even lift?",
+            "Look bro, coffee’s basically a hug in a mug—get after it.",
+            "Look bro, you’re not lazy, you’re just marinating in potential.",
+            "Look bro, rejection’s just the universe saying ‘try a different bar.’",
+            "Look bro, keep grinding—legends don’t quit at level one."
+        ];
+
+        // Get DOM elements
+        const button = document.getElementById('look-bro-btn');
+        const output = document.getElementById('look-bro-output');
+        const counter = document.getElementById('click-counter');
+
+        // Initialize click count
+        let clickCount = 0;
+
+        // Load initial click count from Firebase
+        clickRef.on('value', (snapshot) => {
+            clickCount = snapshot.val() || 0;
+            counter.textContent = `Clicks: ${clickCount}`;
+        });
+
+        // Button click handler
+        button.addEventListener('click', () => {
+            // Random statement
+            const randomIndex = Math.floor(Math.random() * lookBroStatements.length);
+            output.textContent = lookBroStatements[randomIndex];
+
+            // Update click count
+            clickCount++;
+            clickRef.set(clickCount);
+        });
+    </script>
+</body>
+</html>
